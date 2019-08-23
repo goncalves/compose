@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:8.0.2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - "/mysql/my.conf:/etc/mysql/conf.d/config-file.cnf"
+      - "/mysql/data:/var/lib/mysql:rw"
+
+  php:
+    image: magentoomitsis/nginx-fpm7.1-magento
+    ports:
+      - "80:80"
+    volumes:
+      - C:\desenvolvimento\app:/var/www/html
+
+# docker stack deploy --compose-file=php-stack.yml php

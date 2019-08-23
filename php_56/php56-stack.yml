@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:8.0.2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TIME_ZONE: "America/Sao_Paulo"
+    ports:
+      - "3301:3306"
+    volumes:
+      - "./../../docker/mysql/my.conf:/etc/mysql/conf.d/config-file.cnf"
+      - "./../../docker/mysql/data:/var/lib/mysql:rw"
+
+  php56:
+    #image: php:5.6-apache
+    image: alexcheng/magento
+    ports:
+      - "83:80"
+    volumes:
+      - ./../../docker:/var/www/html
+    # command: bash -c "docker-php-ext-install pdo_mysql gd; apache2-foreground"
+
+# docker stack deploy --compose-file=php56-stack.yml php56

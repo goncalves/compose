@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:8.0.2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TIME_ZONE: "America/Sao_Paulo"
+    ports:
+      - "3303:3306"
+    volumes:
+      - "./../../docker/mysql/my.conf:/etc/mysql/conf.d/config-file.cnf"
+      - "./../../docker/mysql/data:/var/lib/mysql:rw"
+
+  php72:
+    image: php:7.2-apache
+    # image: rafaelcgstz/magento2
+    ports:
+      - "85:80"
+    volumes:
+      - ./../../docker:/var/www/html
+    # command: bash -c "docker-php-ext-install pdo_mysql gd; apache2-foreground"
+
+# docker stack deploy --compose-file=php70-stack.yml php70
+# docker container run -ti --name mag2 -v C:\desenvolvimento\app\Magento2\:/var/www/html rafaelcgstz/magento2
