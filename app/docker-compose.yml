@@ -1,0 +1,99 @@
+version: '3'
+services:
+  apache:
+    image: rafaelcgstz/magento2
+    # build: .
+    ports:
+      - "81:80" # web
+      - "9001:9000" # xdebug
+      # - "35729:35729" # live reload
+    volumes:
+      - ./../../docker:/var/www/html
+      - ~/.composer:/var/www/.composer
+      - ~/.npm:/var/www/.npm
+      # - ~/.nvm:/var/www/.nvm
+    labels:
+      - "traefik.frontend.rule=Host:dev.soulmkt"
+      - "traefik.port=80"
+    environment:
+      XDEBUG_CONFIG: "remote_host=localhost"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - dev-network
+
+  db:
+    image: mariadb
+    ports:
+     - 3300:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento
+    volumes:
+      #- dbdata:/var/lib/mysql
+      - "./../../docker/mariadb/data:/var/lib/mysql"
+    networks:
+      - dev-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+     - PMA_HOST=db
+     - PMA_USER=root
+     - PMA_PASSWORD=root
+     - MYSQL_ROOT_PASSWORD=root
+    ports:
+     - 8080:80
+    networks:
+      - dev-network
+
+  redis:
+    image: redis
+    ports:
+     - 6379
+    networks:
+      - dev-network
+
+  redis-session:
+    image: redis
+    ports:
+     - 6379
+    networks:
+      - dev-network
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - dev-network
+
+  whoami:
+    image: emilevauge/whoami # A container that exposes an API to show its IP address
+    labels:
+      - "traefik.frontend.rule=Host:whoami.docker.localhost"
+
+  reverse-proxy:
+    image: traefik # The official Traefik docker image
+    command: --api --docker # Enables the web UI and tells Træfik to listen to docker
+    ports:
+      - "80:80"     # The HTTP port
+      - "86:8080" # The Web UI (enabled by --api)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+
+networks:
+  dev-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    # - "./../../docker/mariadb/data:/var/lib/mysql"
+    #driver: local
+# docker-compose -f docker-compose.yml -f docker-compose.elasticsearch.yml up
