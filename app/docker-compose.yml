@@ -4,7 +4,7 @@ services:
     image: rafaelcgstz/magento2
     # build: .
     ports:
-      - "81:80" # web
+      - "80:80" # web
       - "9001:9000" # xdebug
       # - "35729:35729" # live reload
     volumes:
@@ -30,7 +30,7 @@ services:
     ports:
      - 3300:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=K3rn3lES
       - MYSQL_DATABASE=magento
       - MYSQL_USER=magento
       - MYSQL_PASSWORD=magento
@@ -45,8 +45,8 @@ services:
     environment:
      - PMA_HOST=db
      - PMA_USER=root
-     - PMA_PASSWORD=root
-     - MYSQL_ROOT_PASSWORD=root
+     - PMA_PASSWORD=K3rn3lES
+     - MYSQL_ROOT_PASSWORD=K3rn3lES
     ports:
      - 8080:80
     networks:
@@ -83,7 +83,7 @@ services:
     image: traefik # The official Traefik docker image
     command: --api --docker # Enables the web UI and tells Træfik to listen to docker
     ports:
-      - "80:80"     # The HTTP port
+      - "81:80"     # The HTTP port
       - "86:8080" # The Web UI (enabled by --api)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
