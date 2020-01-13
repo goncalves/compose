@@ -30,10 +30,10 @@ services:
     ports:
      - 3300:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=K3rn3lES
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=magento
       - MYSQL_USER=magento
-      - MYSQL_PASSWORD=magento
+      - MYSQL_PASSWORD=root
     volumes:
       #- dbdata:/var/lib/mysql
       - "./../../docker/mariadb/data:/var/lib/mysql"
@@ -45,10 +45,10 @@ services:
     environment:
      - PMA_HOST=db
      - PMA_USER=root
-     - PMA_PASSWORD=K3rn3lES
-     - MYSQL_ROOT_PASSWORD=K3rn3lES
+     - PMA_PASSWORD=root
+     - MYSQL_ROOT_PASSWORD=root
     ports:
-     - 8080:80
+     - 8079:80
     networks:
       - dev-network
 
